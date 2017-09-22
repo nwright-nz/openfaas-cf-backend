@@ -12,8 +12,6 @@ import (
 	"strconv"
 	"time"
 
-	"code.cloudfoundry.org/garden/client"
-	"code.cloudfoundry.org/garden/client/connection"
 	"github.com/Sirupsen/logrus"
 	natsHandler "github.com/alexellis/faas-nats/handler"
 	cfclient "github.com/cloudfoundry-community/go-cfclient"
@@ -57,15 +55,14 @@ func main() {
 		Password:          config.CFPass,
 		SkipSslValidation: true,
 	}
-	 
-	client,err := cfclient.NewClient(c)
+
+	client, err := cfclient.NewClient(c)
 	if err != nil {
+		log.Printf("ERROR: " + err.Error())
 		log.Fatal("Can't create Cloud Foundry client")
-	}
-	else {
+	} else {
 		log.Printf("Successfully connected to cloud foundry")
 	}
-
 
 	metricsOptions := metrics.BuildMetricsOptions()
 	metrics.RegisterMetrics(metricsOptions)
@@ -89,11 +86,11 @@ func main() {
 	} else {
 		maxRestarts := uint64(5)
 		print(maxRestarts)
-		faasHandlers.Proxy = internalHandlers.MakeProxy(metricsOptions, true, gardenClient, &logger)
-		faasHandlers.RoutelessProxy = internalHandlers.MakeProxy(metricsOptions, true, gardenClient, &logger)
-		faasHandlers.ListFunctions = internalHandlers.MakeFunctionReader(metricsOptions, gardenClient)
-		faasHandlers.DeployFunction = internalHandlers.MakeNewFunctionHandler(metricsOptions, gardenClient, maxRestarts)
-		faasHandlers.DeleteFunction = internalHandlers.MakeDeleteFunctionHandler(metricsOptions, gardenClient)
+		faasHandlers.Proxy = internalHandlers.MakeProxy(metricsOptions, true, client, &logger)
+		faasHandlers.RoutelessProxy = internalHandlers.MakeProxy(metricsOptions, true, client, &logger)
+		faasHandlers.ListFunctions = internalHandlers.MakeFunctionReader(metricsOptions, client)
+		//faasHandlers.DeployFunction = internalHandlers.MakeNewFunctionHandler(metricsOptions, cfClient, maxRestarts)
+		//faasHandlers.DeleteFunction = internalHandlers.MakeDeleteFunctionHandler(metricsOptions, cfClient)
 
 		//Nigel - To implement the alerting/scaling.
 		//faasHandlers.Alert = internalHandlers.MakeAlertHandler(internalHandlers.NewSwarmServiceQuery(gardenClient))

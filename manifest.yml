@@ -1,0 +1,8 @@
+---
+applications:
+  - name: open-faas-gateway
+    memory: 128M
+    env:
+      faas_cf_url: https://api.bosh-lite.com
+      faas_cf_user: admin
+      faas_cf_pass: 5oi55vxvwasfzx2ybzn0 

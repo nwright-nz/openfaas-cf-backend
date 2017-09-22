@@ -6,20 +6,20 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 
-	"code.cloudfoundry.org/garden"
-
+	cfclient "github.com/cloudfoundry-community/go-cfclient"
 	"github.com/nwright-nz/openfaas-cf-backend/metrics"
 	"github.com/nwright-nz/openfaas-cf-backend/requests"
 )
 
 // MakeFunctionReader gives a summary of Function structs with Docker service stats overlaid with Prometheus counters.
-func MakeFunctionReader(metricsOptions metrics.MetricOptions, c garden.Client) http.HandlerFunc {
+func MakeFunctionReader(metricsOptions metrics.MetricOptions, c *cfclient.Client) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
-		var m = make(map[string]string)
-		services, err := c.Containers(m)
+		services, err := c.ListApps()
+
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -28,28 +28,25 @@ func MakeFunctionReader(metricsOptions metrics.MetricOptions, c garden.Client) h
 		var functions []requests.Function
 
 		for _, service := range services {
-			functionProp, err := service.Property("function")
-			if err != nil {
-				fmt.Printf("error trying to get function property")
-			}
+			functionProp, _ := service.Environment["function"]
+			//envProcess, _ := service.Environment["fprocess"]
+
 			if functionProp == "true" {
-				containerName, err := service.Property("name")
-				imageName, err := service.Property("image")
-				var envProcess string
+				containerName := service.Name
+				imageName := service.DockerImage
 
 				f := requests.Function{
 					Name:            containerName,
 					Image:           imageName,
 					InvocationCount: 0,
-					//Replicas:        *service.Spec.Mode.Replicated.Replicas,
-					Replicas:   1, //note: doesnt look like garden has replicas, this is handled by CF?
-					EnvProcess: envProcess,
+					Replicas:        uint64(service.Instances),
+					//EnvProcess:      envProcess.(string),
 				}
 
 				functions = append(functions, f)
 
 				if err != nil {
-					print("There was an error retrieving info about the service: ", service)
+					log.Println("There was an error retrieving info about the service: ", service)
 				}
 			}
 		}

@@ -7,25 +7,24 @@ import (
 	"bytes"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"math/rand"
 	"net"
 	"net/http"
 	"strconv"
 	"time"
 
-	"code.cloudfoundry.org/garden"
-
-	"os"
-
 	"github.com/Sirupsen/logrus"
+	cfclient "github.com/cloudfoundry-community/go-cfclient"
 
 	"github.com/gorilla/mux"
 	"github.com/nwright-nz/openfaas-cf-backend/metrics"
+	"github.com/nwright-nz/openfaas-cf-backend/types"
 	"github.com/prometheus/client_golang/prometheus"
 )
 
 // MakeProxy creates a proxy for HTTP web requests which can be routed to a function.
-func MakeProxy(metrics metrics.MetricOptions, wildcard bool, client garden.Client, logger *logrus.Logger) http.HandlerFunc {
+func MakeProxy(metrics metrics.MetricOptions, wildcard bool, client *cfclient.Client, logger *logrus.Logger) http.HandlerFunc {
 	proxyClient := http.Client{
 		Transport: &http.Transport{
 			Proxy: http.ProxyFromEnvironment,
@@ -74,7 +73,7 @@ func MakeProxy(metrics metrics.MetricOptions, wildcard bool, client garden.Clien
 	}
 }
 
-func lookupInvoke(w http.ResponseWriter, r *http.Request, metrics metrics.MetricOptions, name string, c garden.Client, logger *logrus.Logger, proxyClient *http.Client) {
+func lookupInvoke(w http.ResponseWriter, r *http.Request, metrics metrics.MetricOptions, name string, c *cfclient.Client, logger *logrus.Logger, proxyClient *http.Client) {
 	exists, err := lookupSwarmService(name, c)
 
 	if err != nil || exists == false {
@@ -94,15 +93,26 @@ func lookupInvoke(w http.ResponseWriter, r *http.Request, metrics metrics.Metric
 	}
 }
 
-func lookupSwarmService(serviceName string, c garden.Client) (bool, error) {
+func lookupSwarmService(serviceName string, c *cfclient.Client) (bool, error) {
 	fmt.Printf("Resolving: '%s'\n", serviceName)
-	var m = map[string]string{"garden.state": "created"}
-	services, err := c.Containers(m)
+	services, err := c.ListApps()
 	return len(services) > 0, err
 }
 
-func invokeService(c garden.Client, w http.ResponseWriter, r *http.Request, metrics metrics.MetricOptions, service string, requestBody []byte, logger *logrus.Logger, proxyClient *http.Client) {
+func invokeService(c *cfclient.Client, w http.ResponseWriter, r *http.Request, metrics metrics.MetricOptions, service string, requestBody []byte, logger *logrus.Logger, proxyClient *http.Client) {
 	stamp := strconv.FormatInt(time.Now().Unix(), 10)
+	osEnv := types.OsEnv{}
+	readConfig := types.ReadConfig{}
+	config := readConfig.Read(osEnv)
+	defaultOrg, err := c.GetOrgByName(config.CFOrg)
+	if err != nil {
+		fmt.Println("there was an error getting the org guid " + err.Error())
+	}
+	defaultSpace, err := c.GetSpaceByName(config.CFSpace, defaultOrg.Guid)
+	if err != nil {
+		fmt.Println("there was an error getting the space guid " + err.Error())
+	}
+	fmt.Println(defaultOrg.Guid, defaultSpace.Guid)
 
 	defer func(when time.Time) {
 		seconds := time.Since(when).Seconds()
@@ -112,36 +122,47 @@ func invokeService(c garden.Client, w http.ResponseWriter, r *http.Request, metr
 	}(time.Now())
 
 	//TODO: inject setting rather than looking up each time.
-	var dnsrr bool
-	if os.Getenv("dnsrr") == "true" {
-		dnsrr = true
+	// var dnsrr bool
+	// if os.Getenv("dnsrr") == "true" {
+	// 	dnsrr = true
+	// }
+
+	// watchdogPort := 0
+	addr := "0"
+	fmt.Println("*******************  Service name: " + service)
+	application, err := c.AppByName(service, defaultSpace.Guid, defaultOrg.Guid)
+	if err != nil {
+		fmt.Println("Error getting app " + err.Error())
 	}
 
-	watchdogPort := 0
-	addr := "0"
-
-	// I'm using port mapping to access the container - so this is why Im looking up the host port here.
-	// When doing the CF integration work, I'll go to route lookups
-	services, err := c.Containers(map[string]string{"name": service})
+	fmt.Println(application.DockerImage)
+	services, err := c.GetAppRoutes(application.Guid)
+	if err != nil {
+		fmt.Println("error getting route : " + err.Error())
+	}
+	fmt.Println("route number: " + string(len(services)))
 	for _, service := range services {
-		info, err := service.Info()
-		if err != nil {
-			fmt.Println(err)
-		}
-		watchdogPort = int(info.MappedPorts[0].HostPort)
 
-		addr = info.ExternalIP
+		// info, err := service.Info()
+		// if err != nil {
+		// 	fmt.Println(err)
+		// }
+		//watchdogPort, _ = strconv.Atoi(os.Getenv("PORT"))
+
+		addr = service.Host + ".bosh-lite.com" // need to figure out how to get the domain from the host
+
+		log.Printf("Route detected: " + addr)
 	}
 
 	// Use DNS-RR via tasks.servicename if enabled as override, otherwise VIP.
-	if dnsrr {
-		entries, lookupErr := net.LookupIP(fmt.Sprintf("tasks.%s", service))
-		if lookupErr == nil && len(entries) > 0 {
-			index := randomInt(0, len(entries))
-			addr = entries[index].String()
-		}
-	}
-	url := fmt.Sprintf("http://%s:%d/", addr, watchdogPort)
+	// if dnsrr {
+	// 	entries, lookupErr := net.LookupIP(fmt.Sprintf("tasks.%s", service))
+	// 	if lookupErr == nil && len(entries) > 0 {
+	// 		index := randomInt(0, len(entries))
+	// 		addr = entries[index].String()
+	// 	}
+	// }
+	url := fmt.Sprintf("http://%s/", addr)
 
 	contentType := r.Header.Get("Content-Type")
 	fmt.Printf("[%s] Forwarding request [%s] to: %s\n", stamp, contentType, url)
