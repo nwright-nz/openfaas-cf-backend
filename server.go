@@ -16,12 +16,12 @@ import (
 	"code.cloudfoundry.org/garden/client/connection"
 	"github.com/Sirupsen/logrus"
 	natsHandler "github.com/alexellis/faas-nats/handler"
+	cfclient "github.com/cloudfoundry-community/go-cfclient"
+	"github.com/gorilla/mux"
 	internalHandlers "github.com/nwright-nz/openfaas-cf-backend/handlers"
 	"github.com/nwright-nz/openfaas-cf-backend/metrics"
 	"github.com/nwright-nz/openfaas-cf-backend/plugin"
 	"github.com/nwright-nz/openfaas-cf-backend/types"
-
-	"github.com/gorilla/mux"
 )
 
 type handlerSet struct {
@@ -51,19 +51,21 @@ func main() {
 
 	log.Printf("HTTP Read Timeout: %s", config.ReadTimeout)
 	log.Printf("HTTP Write Timeout: %s", config.WriteTimeout)
-	//cfHost, gardenPort := config.GuardianHost, config.GuardianPort
-
-	cfAddress := "https://" + config.CFUrl
-
-	//gardenClient := client.New(connection.New("tcp", gardenAddress))
-	gardenClient := client.New(connection.New("tcp", "10.10.149.106:7777"))
-	capacity, err := gardenClient.Capacity()
-	if err != nil {
-		log.Fatal("Error retrieving guardian stats")
-	} else {
-		log.Printf("Successful connection. Guardian current capacity: %d Memory in Bytes, %d Disk, %d Maximum number of containers",
-			capacity.MemoryInBytes, capacity.DiskInBytes, capacity.MaxContainers)
+	c := &cfclient.Config{
+		ApiAddress:        config.CFUrl,
+		Username:          config.CFUser,
+		Password:          config.CFPass,
+		SkipSslValidation: true,
 	}
+	 
+	client,err := cfclient.NewClient(c)
+	if err != nil {
+		log.Fatal("Can't create Cloud Foundry client")
+	}
+	else {
+		log.Printf("Successfully connected to cloud foundry")
+	}
+
 
 	metricsOptions := metrics.BuildMetricsOptions()
 	metrics.RegisterMetrics(metricsOptions)
