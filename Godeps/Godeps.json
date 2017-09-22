@@ -1,0 +1,156 @@
+{
+	"ImportPath": "github.com/nwright-nz/openfaas-guardian-backend",
+	"GoVersion": "go1.8",
+	"GodepVersion": "v79",
+	"Deps": [
+		{
+			"ImportPath": "code.cloudfoundry.org/garden",
+			"Comment": "go-wshd-878-g1fcfc83",
+			"Rev": "1fcfc833fffe59406df92dcd7e4b76f5dcb79387"
+		},
+		{
+			"ImportPath": "code.cloudfoundry.org/garden/client",
+			"Comment": "go-wshd-878-g1fcfc83",
+			"Rev": "1fcfc833fffe59406df92dcd7e4b76f5dcb79387"
+		},
+		{
+			"ImportPath": "code.cloudfoundry.org/garden/client/connection",
+			"Comment": "go-wshd-878-g1fcfc83",
+			"Rev": "1fcfc833fffe59406df92dcd7e4b76f5dcb79387"
+		},
+		{
+			"ImportPath": "code.cloudfoundry.org/garden/routes",
+			"Comment": "go-wshd-878-g1fcfc83",
+			"Rev": "1fcfc833fffe59406df92dcd7e4b76f5dcb79387"
+		},
+		{
+			"ImportPath": "code.cloudfoundry.org/garden/transport",
+			"Comment": "go-wshd-878-g1fcfc83",
+			"Rev": "1fcfc833fffe59406df92dcd7e4b76f5dcb79387"
+		},
+		{
+			"ImportPath": "code.cloudfoundry.org/lager",
+			"Rev": "0bfa98e49e7a976af91e918d47978f07c00b081f"
+		},
+		{
+			"ImportPath": "github.com/Sirupsen/logrus",
+			"Comment": "v1.0.3-11-g89742ae",
+			"Rev": "89742aefa4b206dcf400792f3bd35b542998eb3b"
+		},
+		{
+			"ImportPath": "github.com/alexellis/faas-nats/handler",
+			"Comment": "0.1-4-g9e1c44d",
+			"Rev": "9e1c44df17c790a067276bae3ebf4a303124342e"
+		},
+		{
+			"ImportPath": "github.com/alexellis/faas/gateway/queue",
+			"Rev": "cc05f4db688920d8e23df0723e704d597198d155"
+		},
+		{
+			"ImportPath": "github.com/beorn7/perks/quantile",
+			"Rev": "4c0e84591b9aa9e6dcfdf3e020114cd81f89d5f9"
+		},
+		{
+			"ImportPath": "github.com/bmizerany/pat",
+			"Rev": "6226ea591a40176dd3ff9cd8eff81ed6ca721a00"
+		},
+		{
+			"ImportPath": "github.com/gogo/protobuf/gogoproto",
+			"Comment": "v0.4-56-g2adc21f",
+			"Rev": "2adc21fd136931e0388e278825291678e1d98309"
+		},
+		{
+			"ImportPath": "github.com/gogo/protobuf/proto",
+			"Comment": "v0.4-56-g2adc21f",
+			"Rev": "2adc21fd136931e0388e278825291678e1d98309"
+		},
+		{
+			"ImportPath": "github.com/gogo/protobuf/protoc-gen-gogo/descriptor",
+			"Comment": "v0.4-56-g2adc21f",
+			"Rev": "2adc21fd136931e0388e278825291678e1d98309"
+		},
+		{
+			"ImportPath": "github.com/golang/protobuf/proto",
+			"Rev": "11b8df160996e00fd4b55cbaafb3d84ec6d50fa8"
+		},
+		{
+			"ImportPath": "github.com/gorilla/mux",
+			"Comment": "v1.5.0",
+			"Rev": "24fca303ac6da784b9e8269f724ddeb0b2eea5e7"
+		},
+		{
+			"ImportPath": "github.com/matttproud/golang_protobuf_extensions/pbutil",
+			"Comment": "v1.0.0-2-gc12348c",
+			"Rev": "c12348ce28de40eed0136aa2b644d0ee0650e56c"
+		},
+		{
+			"ImportPath": "github.com/nats-io/go-nats",
+			"Comment": "v1.3.0-9-g0977874",
+			"Rev": "0977874fadb35fa59e42744325dbbdfe83aab6b1"
+		},
+		{
+			"ImportPath": "github.com/nats-io/go-nats-streaming",
+			"Comment": "v0.3.4-32-g1b74f22",
+			"Rev": "1b74f22f414c315e983e8aa6dea3571c999a31b2"
+		},
+		{
+			"ImportPath": "github.com/nats-io/go-nats-streaming/pb",
+			"Comment": "v0.3.4-32-g1b74f22",
+			"Rev": "1b74f22f414c315e983e8aa6dea3571c999a31b2"
+		},
+		{
+			"ImportPath": "github.com/nats-io/go-nats/encoders/builtin",
+			"Comment": "v1.3.0-9-g0977874",
+			"Rev": "0977874fadb35fa59e42744325dbbdfe83aab6b1"
+		},
+		{
+			"ImportPath": "github.com/nats-io/go-nats/util",
+			"Comment": "v1.3.0-9-g0977874",
+			"Rev": "0977874fadb35fa59e42744325dbbdfe83aab6b1"
+		},
+		{
+			"ImportPath": "github.com/nats-io/nuid",
+			"Comment": "v1.0.0-2-g3cf34f9",
+			"Rev": "3cf34f9fca4e88afa9da8eabd75e3326c9941b44"
+		},
+		{
+			"ImportPath": "github.com/prometheus/client_golang/prometheus",
+			"Comment": "v0.9.0-pre1-7-g50b3332",
+			"Rev": "50b3332fd63be43e38472600ec187ceec39d26d6"
+		},
+		{
+			"ImportPath": "github.com/prometheus/client_model/go",
+			"Comment": "model-0.0.2-14-g6f38060",
+			"Rev": "6f3806018612930941127f2a7c6c453ba2c527d2"
+		},
+		{
+			"ImportPath": "github.com/prometheus/common/expfmt",
+			"Rev": "2f17f4a9d485bf34b4bfaccc273805040e4f86c8"
+		},
+		{
+			"ImportPath": "github.com/prometheus/common/internal/bitbucket.org/ww/goautoneg",
+			"Rev": "2f17f4a9d485bf34b4bfaccc273805040e4f86c8"
+		},
+		{
+			"ImportPath": "github.com/prometheus/common/model",
+			"Rev": "2f17f4a9d485bf34b4bfaccc273805040e4f86c8"
+		},
+		{
+			"ImportPath": "github.com/prometheus/procfs",
+			"Rev": "e645f4e5aaa8506fc71d6edbc5c4ff02c04c46f2"
+		},
+		{
+			"ImportPath": "github.com/prometheus/procfs/xfs",
+			"Rev": "e645f4e5aaa8506fc71d6edbc5c4ff02c04c46f2"
+		},
+		{
+			"ImportPath": "github.com/tedsuo/rata",
+			"Comment": "v1.0.0-6-g07d2007",
+			"Rev": "07d200713958d05692ac35aa8b5f1949342fee80"
+		},
+		{
+			"ImportPath": "golang.org/x/sys/unix",
+			"Rev": "0f826bdd13b500be0f1d4004938ad978fcc6031e"
+		}
+	]
+}
