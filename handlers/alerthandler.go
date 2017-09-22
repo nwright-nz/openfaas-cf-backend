@@ -13,7 +13,7 @@ import (
 
 	"fmt"
 
-	"github.com/nwright-nz/openfaas-guardian-backend/requests"
+	"github.com/nwright-nz/openfaas-cf-backend/requests"
 )
 
 // DefaultMaxReplicas is the amount of replicas a service will auto-scale up to.

@@ -16,8 +16,8 @@ import (
 
 	"io/ioutil"
 
-	"github.com/nwright-nz/openfaas-guardian-backend/handlers"
-	"github.com/nwright-nz/openfaas-guardian-backend/requests"
+	"github.com/nwright-nz/openfaas-cf-backend/handlers"
+	"github.com/nwright-nz/openfaas-cf-backend/requests"
 )
 
 // NewExternalServiceQuery proxies service queries to external plugin via HTTP

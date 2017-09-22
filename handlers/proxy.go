@@ -20,7 +20,7 @@ import (
 	"github.com/Sirupsen/logrus"
 
 	"github.com/gorilla/mux"
-	"github.com/nwright-nz/openfaas-guardian-backend/metrics"
+	"github.com/nwright-nz/openfaas-cf-backend/metrics"
 	"github.com/prometheus/client_golang/prometheus"
 )
 
@@ -117,11 +117,10 @@ func invokeService(c garden.Client, w http.ResponseWriter, r *http.Request, metr
 		dnsrr = true
 	}
 
-	
 	watchdogPort := 0
 	addr := "0"
-	
-	// I'm using port mapping to access the container - so this is why Im looking up the host port here. 
+
+	// I'm using port mapping to access the container - so this is why Im looking up the host port here.
 	// When doing the CF integration work, I'll go to route lookups
 	services, err := c.Containers(map[string]string{"name": service})
 	for _, service := range services {
@@ -134,7 +133,6 @@ func invokeService(c garden.Client, w http.ResponseWriter, r *http.Request, metr
 		addr = info.ExternalIP
 	}
 
-	
 	// Use DNS-RR via tasks.servicename if enabled as override, otherwise VIP.
 	if dnsrr {
 		entries, lookupErr := net.LookupIP(fmt.Sprintf("tasks.%s", service))

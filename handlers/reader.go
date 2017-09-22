@@ -10,8 +10,8 @@ import (
 
 	"code.cloudfoundry.org/garden"
 
-	"github.com/nwright-nz/openfaas-guardian-backend/metrics"
-	"github.com/nwright-nz/openfaas-guardian-backend/requests"
+	"github.com/nwright-nz/openfaas-cf-backend/metrics"
+	"github.com/nwright-nz/openfaas-cf-backend/requests"
 )
 
 // MakeFunctionReader gives a summary of Function structs with Docker service stats overlaid with Prometheus counters.
@@ -19,7 +19,7 @@ func MakeFunctionReader(metricsOptions metrics.MetricOptions, c garden.Client) h
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		var m = make(map[string]string)
-                services, err := c.Containers(m)
+		services, err := c.Containers(m)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -30,16 +30,15 @@ func MakeFunctionReader(metricsOptions metrics.MetricOptions, c garden.Client) h
 		for _, service := range services {
 			functionProp, err := service.Property("function")
 			if err != nil {
-                           fmt.Printf("error trying to get function property")
-                        }
-                        if functionProp == "true" {
-                        containerName, err := service.Property("name")
+				fmt.Printf("error trying to get function property")
+			}
+			if functionProp == "true" {
+				containerName, err := service.Property("name")
 				imageName, err := service.Property("image")
 				var envProcess string
 
-				
 				f := requests.Function{
-					Name: containerName,
+					Name:            containerName,
 					Image:           imageName,
 					InvocationCount: 0,
 					//Replicas:        *service.Spec.Mode.Replicated.Replicas,
@@ -52,9 +51,8 @@ func MakeFunctionReader(metricsOptions metrics.MetricOptions, c garden.Client) h
 				if err != nil {
 					print("There was an error retrieving info about the service: ", service)
 				}
-                           }
 			}
-		
+		}
 
 		functionBytes, _ := json.Marshal(functions)
 		w.Header().Set("Content-Type", "application/json")

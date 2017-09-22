@@ -16,10 +16,10 @@ import (
 	"code.cloudfoundry.org/garden/client/connection"
 	"github.com/Sirupsen/logrus"
 	natsHandler "github.com/alexellis/faas-nats/handler"
-	internalHandlers "github.com/nwright-nz/openfaas-guardian-backend/handlers"
-	"github.com/nwright-nz/openfaas-guardian-backend/metrics"
-	"github.com/nwright-nz/openfaas-guardian-backend/plugin"
-	"github.com/nwright-nz/openfaas-guardian-backend/types"
+	internalHandlers "github.com/nwright-nz/openfaas-cf-backend/handlers"
+	"github.com/nwright-nz/openfaas-cf-backend/metrics"
+	"github.com/nwright-nz/openfaas-cf-backend/plugin"
+	"github.com/nwright-nz/openfaas-cf-backend/types"
 
 	"github.com/gorilla/mux"
 )

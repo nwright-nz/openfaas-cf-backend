@@ -12,7 +12,7 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/alexellis/faas/gateway/queue"
 	"github.com/gorilla/mux"
-	"github.com/nwright-nz/openfaas-guardian-backend/metrics"
+	"github.com/nwright-nz/openfaas-cf-backend/metrics"
 )
 
 // MakeQueuedProxy accepts work onto a queue

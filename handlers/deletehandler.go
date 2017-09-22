@@ -13,8 +13,8 @@ import (
 
 	"io/ioutil"
 
-	"github.com/nwright-nz/openfaas-guardian-backend/metrics"
-	"github.com/nwright-nz/openfaas-guardian-backend/requests"
+	"github.com/nwright-nz/openfaas-cf-backend/metrics"
+	"github.com/nwright-nz/openfaas-cf-backend/requests"
 )
 
 func MakeDeleteFunctionHandler(metricsOptions metrics.MetricOptions, c garden.Client) http.HandlerFunc {
