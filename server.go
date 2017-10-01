@@ -14,8 +14,8 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	natsHandler "github.com/alexellis/faas-nats/handler"
-	cfclient "github.com/cloudfoundry-community/go-cfclient"
 	"github.com/gorilla/mux"
+	cfclient "github.com/nwright-nz/go-cfclient"
 	internalHandlers "github.com/nwright-nz/openfaas-cf-backend/handlers"
 	"github.com/nwright-nz/openfaas-cf-backend/metrics"
 	"github.com/nwright-nz/openfaas-cf-backend/plugin"
@@ -89,7 +89,7 @@ func main() {
 		faasHandlers.Proxy = internalHandlers.MakeProxy(metricsOptions, true, client, &logger)
 		faasHandlers.RoutelessProxy = internalHandlers.MakeProxy(metricsOptions, true, client, &logger)
 		faasHandlers.ListFunctions = internalHandlers.MakeFunctionReader(metricsOptions, client)
-		//faasHandlers.DeployFunction = internalHandlers.MakeNewFunctionHandler(metricsOptions, cfClient, maxRestarts)
+		faasHandlers.DeployFunction = internalHandlers.MakeNewFunctionHandler(metricsOptions, client, maxRestarts)
 		//faasHandlers.DeleteFunction = internalHandlers.MakeDeleteFunctionHandler(metricsOptions, cfClient)
 
 		//Nigel - To implement the alerting/scaling.

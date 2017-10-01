@@ -15,7 +15,7 @@ import (
 	"time"
 
 	"github.com/Sirupsen/logrus"
-	cfclient "github.com/cloudfoundry-community/go-cfclient"
+	cfclient "github.com/nwright-nz/go-cfclient"
 
 	"github.com/gorilla/mux"
 	"github.com/nwright-nz/openfaas-cf-backend/metrics"
@@ -137,6 +137,7 @@ func invokeService(c *cfclient.Client, w http.ResponseWriter, r *http.Request, m
 
 	fmt.Println(application.DockerImage)
 	services, err := c.GetAppRoutes(application.Guid)
+
 	if err != nil {
 		fmt.Println("error getting route : " + err.Error())
 	}

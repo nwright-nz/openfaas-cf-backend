@@ -141,6 +141,19 @@ type GatewayConfig struct {
 	CFSpace              string
 }
 
+// AppSpec for the application in Cloud Foundry
+type AppSpec struct {
+	Name        string            `json:"name"`
+	Spaceguid   string            `json:"space_guid"`
+	Dockerimage string            `json:"docker_image"`
+	Memory      string            `json:"memory,omitempty"`
+	State       string            `json:"state,omitempty"`
+	Command     string            `json:"command"`
+	Env         map[string]string `json:"environment_json,omitempty"`
+	Instances   int               `json:"instances"`
+	Diego       bool              `json:"diego"`
+}
+
 // UseNATS Use NATSor not
 func (g *GatewayConfig) UseNATS() bool {
 	return g.NATSPort != nil &&

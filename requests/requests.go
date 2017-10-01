@@ -12,7 +12,7 @@ type CreateFunctionRequest struct {
 	Image string `json:"image"`
 
 	// Network is specific to Docker Swarm - default overlay network is: func_functions
-	Network string `json:"network"`
+	//Network string `json:"network"`
 
 	// EnvProcess corresponds to the fprocess variable for your container watchdog.
 	EnvProcess string `json:"envProcess"`

@@ -9,7 +9,7 @@ import (
 	"log"
 	"net/http"
 
-	cfclient "github.com/cloudfoundry-community/go-cfclient"
+	cfclient "github.com/nwright-nz/go-cfclient"
 	"github.com/nwright-nz/openfaas-cf-backend/metrics"
 	"github.com/nwright-nz/openfaas-cf-backend/requests"
 )
